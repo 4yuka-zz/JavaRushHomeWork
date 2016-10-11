@@ -1,8 +1,8 @@
 package com.javarush.test.level20.lesson02.task02;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /* Читаем и пишем в файл: JavaRush
 Реализуйте логику записи в файл и чтения из файла для класса JavaRush
@@ -43,11 +43,65 @@ public class Solution {
         public List<User> users = new ArrayList<>();
 
         public void save(OutputStream outputStream) throws Exception {
-            //implement this method - реализуйте этот метод
+            PrintWriter writer = new PrintWriter(outputStream);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
+            for (User user : users) {
+                String FirstName = user.getFirstName();
+                if(FirstName != null)
+                    writer.println(FirstName);
+                else
+                    writer.println("NA");
+                String LastName = user.getLastName();
+                if(FirstName != null)
+                    writer.println(LastName);
+                else
+                    writer.println("NA");
+                Date BirthDate = user.getBirthDate();
+                if(BirthDate != null)
+                    writer.println(formatter.format(BirthDate));
+                else
+                    writer.println("NA");
+                writer.println(user.isMale());
+                User.Country Country = user.getCountry();
+                if(Country != null)
+                    writer.println(Country.getDisplayedName());
+                else
+                    writer.println("NA");
+            }
+            writer.close();
         }
 
         public void load(InputStream inputStream) throws Exception {
-            //implement this method - реализуйте этот метод
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            while(reader.ready())
+            {
+                User user = new User();
+                String FirstName = reader.readLine();
+                if(FirstName.equals("NA"))
+                    FirstName = null;
+                user.setFirstName(FirstName);
+                String LastName = reader.readLine();
+                if(LastName.equals("NA"))
+                    LastName = null;
+                user.setLastName(LastName);
+                String BirthDate = reader.readLine();
+                if(BirthDate.equals("NA"))
+                    BirthDate = null;
+                user.setBirthDate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(BirthDate));
+                String isMale = reader.readLine();
+                user.setMale(Boolean.valueOf(isMale));
+                String Country = reader.readLine();
+                if(Country.equals("NA"))
+                    user.setCountry(null);
+                else if (Country.equals("Russia"))
+                    user.setCountry(User.Country.RUSSIA);
+                else if (Country.equals("Ukraine"))
+                    user.setCountry(User.Country.UKRAINE);
+                else
+                    user.setCountry(User.Country.OTHER);
+                users.add(user);
+            }
+            reader.close();
         }
     }
 }
