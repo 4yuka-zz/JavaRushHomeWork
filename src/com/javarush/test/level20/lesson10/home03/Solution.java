@@ -9,23 +9,26 @@ import java.io.*;
 Сигнатура класса В не содержит ошибку :)
 Метод main не участвует в тестировании.
 */
-public class Solution {
-    public static void main(String[] args) throws IOException
+public class Solution{
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException
     {
         File your_file_name = File.createTempFile("your_file_name", null);
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(your_file_name));
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(your_file_name));
-        A savedObject = new A("1");
-        outputStream.writeObject(savedObject);
-        System.out.println(savedObject);
-        A loadedObject = new A("2");
-        System.out.println(loadedObject);
+        Solution.B saveb = new Solution().new B("1");
+        outputStream.writeObject(saveb);
+        B loadb = (B)inputStream.readObject();
+        System.out.println(loadb.name);
         inputStream.close();
         outputStream.close();
     }
 
-    public static class A {
+    public static class A
+    {
         protected String name = "A";
+
+        public A() {}
 
         public A(String name) {
             this.name += name;
@@ -33,11 +36,16 @@ public class Solution {
     }
 
     public class B extends A implements Serializable {
-        protected String name;
 
         public B(String name) {
             super(name);
             this.name += name;
+        }
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.writeObject(name);
+        }
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            name = (String)in.readObject();
         }
     }
 }
