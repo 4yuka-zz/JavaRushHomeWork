@@ -1,6 +1,5 @@
 package com.javarush.test.level21.lesson02.task01;
 
-import org.jetbrains.annotations.Contract;
 
 /* Определяем адрес сети
 1) Даны IP-адрес и маска подсети, необходимо вычислить адрес сети - метод getNetAddress.
